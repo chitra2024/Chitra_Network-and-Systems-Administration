@@ -1,0 +1,22 @@
+---
+- name: Deploy Apache Docker Container
+  hosts: 16.171.11.56
+  become: true
+  tasks:
+    - name: Build Docker image
+      docker_image:
+        source: build
+        build:
+          path: /home/ubuntu/docker
+        name: my_image
+        tag: latest
+
+    - name: Run Apache Docker container
+      docker_container:
+        name: my_apache1_container
+        image: my_image
+        ports:
+          - "80:80"  # Map port 80 from container to port 80 on host
+        networks:
+          - name: my_network
+        state: started
